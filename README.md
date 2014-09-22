@@ -13,4 +13,3 @@ We're going to build Airbnb. Really. We're going to take this in steps. First le
 ## Resources
 
 [Foreign key and Class Name AR class methods](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html)
-
