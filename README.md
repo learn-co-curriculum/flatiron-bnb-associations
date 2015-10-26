@@ -1,8 +1,4 @@
----
-tags: rails, associations, migrations, foreign keys
-language: ruby
-resources: 1
----
+
 
 # Flatiron-bnb: Associations
 
