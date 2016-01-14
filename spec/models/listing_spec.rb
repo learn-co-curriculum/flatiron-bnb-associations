@@ -1,50 +1,75 @@
 require 'rails_helper'
 
 describe Listing do
-  it 'has a title' do 
-    expect(@listing1.title).to eq("Beautiful Apartment on Main Street")
+  before do
+    @new_york_city = City.create(name: 'NYC')
+
+    @financial_district = Neighborhood.create(name: 'Fi Di', city: @new_york_city)
+
+    @amanda = User.create(name: "Amanda")
+    @logan = User.create(name: "Logan")
+
+    @listing = Listing.create(
+        address: '123 Main Street',
+        listing_type: "private room",
+        title: "Beautiful Apartment on Main Street",
+        description: "My apartment is great. there's a bedroom. close to subway....blah blah",
+        price: 50.00,
+        neighborhood: @financial_district,
+        host: @amanda)
+
+    @reservation = Reservation.create(
+        checkin: '2014-04-25',
+        checkout: '2014-04-30',
+        listing: @listing,
+        guest: @logan)
+
+
+    @review = Review.create(
+        description: "This place was great!",
+        rating: 5,
+        guest: @logan,
+        reservation: @reservation)
+  end
+
+  it 'has a title' do
+    expect(@listing.title).to eq("Beautiful Apartment on Main Street")
   end
 
   it 'has a description' do
-    expect(@listing3.description).to eq("Whole house for rent on mountain. Many bedrooms.")
+    expect(@listing.description).to eq("My apartment is great. there's a bedroom. close to subway....blah blah")
   end
 
-  it 'has an address' do 
-    expect(@listing1.address).to eq('123 Main Street')
+  it 'has an address' do
+    expect(@listing.address).to eq('123 Main Street')
   end
 
-  it 'has a listing type' do 
-    expect(@listing2.listing_type).to eq("shared room")
+  it 'has a listing type' do
+    expect(@listing.listing_type).to eq("private room")
   end
 
   it 'has a price' do
-    expect(@listing2.price).to eq(15.00) 
+    expect(@listing.price).to eq(50.00)
   end
 
-  it 'belongs to a neighborhood' do 
-    expect(@listing2.neighborhood.name).to eq('Green Point')
+  it 'belongs to a neighborhood' do
+    expect(@listing.neighborhood.name).to eq("Fi Di")
   end
 
-  it 'belongs to a host' do 
-    expect(@listing2.host.name).to eq('Katie')
+  it 'belongs to a host' do
+    expect(@listing.host.name).to eq("Amanda")
   end
 
   it 'has many reservations' do
-    vaca_res = Reservation.create(checkin: '2015-03-15', checkout: '2015-03-20', listing_id: @listing3.id, guest_id: 2)
-    staycation = Reservation.create(checkin: '2015-04-10', checkout: '2015-04-15', listing_id: @listing3.id, guest_id: 1)
-    expect(@listing3.reservations).to include(vaca_res)
-    expect(@listing3.reservations).to include(staycation)
+    expect(@listing.reservations).to include(@reservation)
   end
 
-  it 'knows about all of its guests' do 
-    vaca_res = Reservation.create(checkin: '2015-03-15', checkout: '2015-03-20', listing_id: @listing3.id, guest_id: 1)
-    staycation = Reservation.create(checkin: '2015-04-10', checkout: '2015-04-15', listing_id: @listing3.id, guest_id: 2)
-    expect(@listing3.guests.collect{|g| g.id }).to include(1)
-    expect(@listing3.guests.collect{|g| g.id }).to include(2)
+  it 'knows about all of its guests' do
+    expect(@listing.guests).to include(@logan)
   end
 
-  it 'has many reviews through reservations' do 
-    expect(@listing1.reviews).to include(@review1)
+  it 'has many reviews through reservations' do
+    expect(@listing.reviews).to include(@review)
   end
 
 end
