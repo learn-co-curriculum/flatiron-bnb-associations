@@ -1,53 +1,64 @@
 require 'rails_helper'
 
 describe User do
-  before do
-    @new_york_city = City.create(name: 'NYC')
-    @green_point = Neighborhood.create(name: 'Green Point', city: @new_york_city)
+  let(:katie) { User.create(name: "Katie") }
 
-    @katie = User.create(name: "Katie")
-    @logan = User.create(name: "Logan")
+  it 'has a name' do
+    expect(katie.name).to eq("Katie")
+  end
 
-    @listing = Listing.create(
+  context "guest and host" do
+    let(:nyc) { City.create(name: 'NYC') }
+    let(:green_point) { Neighborhood.create(name: 'Green Point', city: nyc) }
+    let(:listing) do
+      Listing.create(
         address: '6 Maple Street',
         listing_type: "shared room",
         title: "Shared room in apartment",
         description: "share a room with me because I'm poor",
         price: 15.00,
-        neighborhood: @green_point,
-        host: @katie)
-
-    @reservation = Reservation.create(
+        neighborhood: green_point,
+        host: katie
+      )
+    end
+    let(:logan) { User.create(name: "Logan") }
+    let(:reservation) do
+      Reservation.create(
         checkin: '2014-04-25',
         checkout: '2014-04-30',
-        listing: @listing,
-        guest: @logan)
+        listing: listing,
+        guest: logan
+      )
+    end
 
-    @review = Review.create(
-        description: "Meh, the host I shared a room with snored.",
-        rating: 3,
-        guest: @logan,
-        reservation: @reservation)
+    context "as host" do
+      it "has many listings" do
+        expect(katie.listings).to include(listing)
+      end
+
+      it 'has many reservations through their listing' do
+        expect(katie.reservations).to include(reservation)
+      end
+    end
+
+    context "as guest" do
+      let(:review) do
+        Review.create(
+          description: "Meh, the host I shared a room with snored.",
+          rating: 3,
+          guest: logan,
+          reservation: reservation
+        )
+      end
+
+      it 'has many trips' do
+        expect(logan.trips).to include(reservation)
+      end
+
+
+      it 'has written many reviews' do
+        expect(logan.reviews).to include(review)
+      end
+    end
   end
-
-  it 'has a name' do
-    expect(@katie.name).to eq("Katie")
-  end
-
-  it 'as a host has many listings' do
-    expect(@katie.listings).to include(@listing)
-  end
-
-  it 'as a guest has many trips' do
-    expect(@logan.trips).to include(@reservation)
-  end
-
-  it 'as a host has many reservations through their listing' do
-    expect(@katie.reservations).to include(@reservation)
-  end
-
-  it 'as a guest has written many reviews' do
-    expect(@logan.reviews).to include(@review)
-  end
-
 end
