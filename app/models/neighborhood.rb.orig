@@ -1,0 +1,8 @@
+class Neighborhood < ActiveRecord::Base
+  belongs_to :city
+<<<<<<< HEAD
+=======
+
+>>>>>>> Rewrite tests to separate concerns
+  has_many :listings
+end
