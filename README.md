@@ -44,6 +44,10 @@ the listings table, otherwise, ActiveRecord is going to default to looking for a
 has_many :listings, :foreign_key => 'host_id'
 ```
 
+If you're not sure how to use these options, make sure to check out the resource
+links below.
+
 ## Resources
 
-[Foreign key and Class Name AR class methods](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html)
+- [`belongs_to` class_name option](https://guides.rubyonrails.org/association_basics.html#options-for-belongs-to-class-name)
+- [`has_many` foreign_key option](https://guides.rubyonrails.org/association_basics.html#options-for-has-many-foreign-key)
